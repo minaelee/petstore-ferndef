@@ -1,0 +1,137 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fern-api/fern/main/fern.schema.json
+
+service:
+  base-path: /user
+  auth: false
+
+  endpoints:
+    createUser:
+      display-name: Create user
+      docs: This can only be done by the logged in user.
+      method: POST
+      path: ""
+      request: User
+      response: User
+      examples:
+        - request: $User.ExampleUserRequest
+          response: 
+            body: $User.ExampleUserResponse
+
+    createUsersWithListInput:
+      display-name: Creates list of users with given input array
+      docs: Creates list of users with given input array
+      method: POST
+      path: /createWithList
+      request: list<User>
+      response: User
+      examples:
+        - request: 
+          - $User.ExampleUserRequest
+          response: 
+            body: $User.ExampleUserResponse
+
+    loginUser:
+      display-name: Logs user into the system
+      method: GET
+      path: /login
+      request: 
+        name: loginUserRequest
+        query-parameters:
+          username: 
+            type: optional<string>
+            docs: The user name for login
+          password: 
+            type: optional<string>
+            docs: The password for login in clear text
+      response: string
+      errors:
+        - InvalidUsernameOrPasswordError
+
+    logoutUser:
+      display-name: Logs out current logged in user session
+      method: GET
+      path: /logout
+
+    getUserByName:
+      display-name: Get user by user name
+      method: GET
+      path: /{username}
+      path-parameters:
+        username:
+          type: string
+          docs: The name that needs to be fetched. Use user1 for testing.
+      response: User
+      errors:
+        - InvalidUsernameError
+        - UserNotFoundError
+      examples:
+        - response: 
+            body: $User.ExampleUserResponse
+
+    updateUser:
+      display-name: Update user
+      docs: This can only be done by the logged in user
+      method: PUT
+      path: /{username}
+      path-parameters:
+        username:
+          type: string
+          docs: name that needs to be updated
+      request: User
+      examples:
+        - request: $User.ExampleUserRequest
+        
+    deleteUser:
+      display-name: Delete user
+      docs: This can only be done by the logged in user
+      method: DELETE
+      path: /{username}
+      path-parameters:
+        username: 
+          type: string
+          docs: The name that needs to be deleted
+      errors:
+        - InvalidUsernameError
+        - UserNotFoundError
+        
+types:
+  User:
+    properties:
+      id: optional<integer>
+      username: optional<string>
+      firstName: optional<string>
+      lastName: optional<string>
+      email: optional<string>
+      password: optional<string>
+      phone: optional<string>
+      userStatus:
+        type: optional<integer>
+        docs: User Status
+    examples:
+      - name: ExampleUserRequest
+        value:
+          id: 1
+          username: theUser
+          firstName: John
+          lastName: James
+          email: john@email.com
+          userStatus: 1
+      - name: ExampleUserResponse
+        value:
+          id: 1
+          username: theUser
+          firstName: John
+          lastName: James
+          email: john@email.com
+          password: 'password'
+          phone: 'phone'
+          userStatus: 1
+
+errors:
+  UserNotFoundError:
+    status-code: 404
+    type: User
+  InvalidUsernameOrPasswordError:
+    status-code: 400
+  InvalidUsernameError:
+    status-code: 400
