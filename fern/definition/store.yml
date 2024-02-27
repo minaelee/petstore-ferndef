@@ -6,30 +6,29 @@ service:
 
   endpoints:
     getInventory:
-      display-name: Returns pet inventories by status
+      auth: true
+      display-name: Get inventory of Pets
       docs: Returns a map of status codes to quantities
       method: GET
-      auth: true
       path: /inventory
       response: map<string, integer>
       examples:
         - response:
-            body: { 'string': 1 }
+            body: { 'pending': 4 }
 
     placeOrder:
-      display-name: Place an order for a pet
-      docs: Place a new order in the store
+      display-name: Place order
+      docs: Place a new order in the store for a Pet
       method: POST
       path: /order
-      request: Order
+      request: OrderRequest
       response: Order
       errors:
         - InvalidOrderInputError
       examples:
-        - request: $Order.ExampleOrderRequest
+        - request: $OrderRequest.ExampleOrderRequest
           response: 
             body: $Order.ExampleOrderResponse
-
 
     findOrderByID:
       display-name: Find purchase order by ID
@@ -47,7 +46,9 @@ service:
         - OrderNotFoundError
         - InvalidOrderIDError
       examples:
-        - response: 
+        - path-parameters: 
+            id: 100004
+          response: 
             body: $Order.ExampleOrderResponse
 
     deleteOrder:
@@ -81,19 +82,23 @@ types:
       status: optional<OrderStatus>
       complete: optional<boolean>
     examples:
-      - name: ExampleOrderRequest
-        value:
-          id: 1
-          petId: 1
-          quantity: 1
       - name: ExampleOrderResponse
         value:
-          id: 1
-          petId: 1
+          id: 100004
+          petId: 44
           quantity: 1
           status: placed 
           complete: true
 
+  OrderRequest:
+    properties:
+      petId: optional<integer>
+      quantity: optional<integer>
+    examples:
+      - name: ExampleOrderRequest
+        value:
+          petId: 44
+          quantity: 1
 
 errors:
   InvalidOrderIDError:

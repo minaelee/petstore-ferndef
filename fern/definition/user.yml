@@ -5,15 +5,15 @@ service:
   auth: false
 
   endpoints:
-    createUser:
+    create:
       display-name: Create user
-      docs: This can only be done by the logged in user.
+      docs: This can only be peformed by the logged in user.
       method: POST
       path: ""
-      request: User
+      request: UserRequest
       response: User
       examples:
-        - request: $User.ExampleUserRequest
+        - request: $UserRequest.ExampleUserRequest
           response: 
             body: $User.ExampleUserResponse
 
@@ -30,7 +30,7 @@ service:
           response: 
             body: $User.ExampleUserResponse
 
-    loginUser:
+    login:
       display-name: Logs user into the system
       method: GET
       path: /login
@@ -47,12 +47,12 @@ service:
       errors:
         - InvalidUsernameOrPasswordError
 
-    logoutUser:
+    logout:
       display-name: Logs out current logged in user session
       method: GET
       path: /logout
 
-    getUserByName:
+    get:
       display-name: Get user by user name
       method: GET
       path: /{username}
@@ -68,7 +68,7 @@ service:
         - response: 
             body: $User.ExampleUserResponse
 
-    updateUser:
+    update:
       display-name: Update user
       docs: This can only be done by the logged in user
       method: PUT
@@ -81,7 +81,7 @@ service:
       examples:
         - request: $User.ExampleUserRequest
         
-    deleteUser:
+    delete:
       display-name: Delete user
       docs: This can only be done by the logged in user
       method: DELETE
@@ -108,24 +108,34 @@ types:
         type: optional<integer>
         docs: User Status
     examples:
-      - name: ExampleUserRequest
-        value:
-          id: 1
-          username: theUser
-          firstName: John
-          lastName: James
-          email: john@email.com
-          userStatus: 1
       - name: ExampleUserResponse
         value:
-          id: 1
-          username: theUser
-          firstName: John
-          lastName: James
-          email: john@email.com
-          password: 'password'
-          phone: 'phone'
+          id: 155
+          username: doglover123
+          firstName: Katie
+          lastName: Neumann
+          email: doglover123@email.com
+          password: password
+          phone: "5557891234"
           userStatus: 1
+
+  UserRequest:
+    properties:
+      username: optional<string>
+      firstName: optional<string>
+      lastName: optional<string>
+      email: optional<string>
+      password: optional<string>
+      phone: optional<string>
+    examples:
+      - name: ExampleUserRequest
+        value:
+          id: 155
+          username: doglover123
+          firstName: Katie
+          lastName: Neumann
+          email: doglover123@email.com
+          phone: "5557891234"
 
 errors:
   UserNotFoundError:

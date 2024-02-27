@@ -6,5 +6,5 @@ error-discrimination:
   strategy: status-code
 auth: bearer
 environments:
-  Swagger: https://petstore3.swagger.io/api/v3
-default-environment: Swagger
+  Sandbox: https://petstore3.swagger.io/api/v3
+default-environment: Sandbox
