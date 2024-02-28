@@ -10,10 +10,10 @@ service:
       docs: This can only be peformed by the logged in user.
       method: POST
       path: ""
-      request: UserRequest
+      request: CreateUserRequest
       response: User
       examples:
-        - request: $UserRequest.ExampleUserRequest
+        - request: $CreateUserRequest.ExampleCreateUserRequest
           response: 
             body: $User.ExampleUserResponse
 
@@ -22,11 +22,16 @@ service:
       docs: Creates list of users with given input array
       method: POST
       path: /createWithList
-      request: list<User>
+      request: CreateUsersWithListInputRequest
       response: User
       examples:
         - request: 
-          - $User.ExampleUserRequest
+            - username: doglover123
+              firstName: Katie
+              lastName: Neumann
+              email: doglover123@email.com
+              phone: "5557891234"
+              userStatus: 1
           response: 
             body: $User.ExampleUserResponse
 
@@ -65,7 +70,9 @@ service:
         - InvalidUsernameError
         - UserNotFoundError
       examples:
-        - response: 
+        - path-parameters:
+            username: doglover123
+          response: 
             body: $User.ExampleUserResponse
 
     update:
@@ -77,9 +84,11 @@ service:
         username:
           type: string
           docs: name that needs to be updated
-      request: User
+      request: UpdateUserRequest
       examples:
-        - request: $User.ExampleUserRequest
+        - path-parameters:
+            username: doglover123
+          request: $UpdateUserRequest.ExampleUserUpdate
         
     delete:
       display-name: Delete user
@@ -119,7 +128,7 @@ types:
           phone: "5557891234"
           userStatus: 1
 
-  UserRequest:
+  CreateUserRequest:
     properties:
       username: optional<string>
       firstName: optional<string>
@@ -128,14 +137,31 @@ types:
       password: optional<string>
       phone: optional<string>
     examples:
-      - name: ExampleUserRequest
+      - name: ExampleCreateUserRequest
         value:
-          id: 155
           username: doglover123
           firstName: Katie
           lastName: Neumann
           email: doglover123@email.com
           phone: "5557891234"
+
+  UpdateUserRequest:
+    properties:
+      id: integer
+      username: optional<string>
+      firstName: optional<string>
+      lastName: optional<string>
+      email: optional<string>
+      password: optional<string>
+      phone: optional<string>
+    examples:
+      - name: ExampleUserUpdate
+        value:
+          id: 155
+          email: petperson@email.com
+
+  CreateUsersWithListInputRequest: 
+    type: list<User>
 
 errors:
   UserNotFoundError:
